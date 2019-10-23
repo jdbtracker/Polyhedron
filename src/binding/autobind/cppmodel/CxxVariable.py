@@ -6,4 +6,5 @@ class CxxVariable(CxxNode):
         CxxNode.__init__(self, sourceObject, parent)
 
 
-    # def function
+    def __str__(self):
+        return self.sourceObject.spelling

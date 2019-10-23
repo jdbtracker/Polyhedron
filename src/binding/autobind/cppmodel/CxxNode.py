@@ -1,4 +1,4 @@
-
+from clang import cindex
 
 class CxxNode():
     
@@ -40,6 +40,18 @@ class CxxNode():
             output += child.dump(level + 1)
 
         return output
+
+
+    def getContainingNamespaces(self, node, data):
+        if node is None:
+            data = self.getContainingNamespaces(self.sourceObject, data)
+        else:
+            if node:
+                if (node.kind == cindex.CursorKind.NAMESPACE):
+                    data.append(node.spelling)
+                if node.semantic_parent and node.semantic_parent.kind != cindex.CursorKind.TRANSLATION_UNIT:
+                    data = self.getContainingNamespaces(node.semantic_parent, data)
+        return data
 
     def __str__(self):
         return self.sourceObject.spelling

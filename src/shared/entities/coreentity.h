@@ -3,6 +3,7 @@
 #include "cube.h"
 #include "ents.h"
 #include "entityfactory.h"
+#include "engine/scriptexport.h"
 #include <nlohmann/json.hpp>
 
 namespace json_utils
@@ -63,9 +64,9 @@ namespace entities {
             short attr3 = 0;
             short attr4 = 0;
             short attr5 = 0;
-            uchar et_type = ET_EMPTY;       // These are for the ET(Engine Type) values.
-            uchar ent_type = ENT_INANIMATE; // These are for ENT_(DynEnt/PhysEnt Type) values.
-            uchar game_type = GAMEENTITY;   // the internal game entity type values.
+            DONTSERIALIZE uchar et_type = ET_EMPTY;       // These are for the ET(Engine Type) values.
+            DONTSERIALIZE uchar ent_type = ENT_INANIMATE; // These are for ENT_(DynEnt/PhysEnt Type) values.
+            DONTSERIALIZE uchar game_type = GAMEENTITY;   // the internal game entity type values.
             uchar reserved = 0;
             short model_idx = 0;
 

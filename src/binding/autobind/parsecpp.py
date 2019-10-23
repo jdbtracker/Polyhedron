@@ -18,6 +18,7 @@ libclang_paths = [
 ]
 
 EXPORT_ANNOTATION = "scriptexport"
+DONTSERIALIZE_ANNOTATION = "dontserialize"
 PROJECT_ROOT = os.path.dirname(os.getcwd())
 
 class CppParser:
@@ -113,8 +114,13 @@ class CppParser:
             if type(parent) == CxxClass:
                 if self.cursor_is_part_of_file_or_header(cursor, file):
                     if (cursor.kind in [cindex.CursorKind.FIELD_DECL]):
-                        print(">>> class {} field({}) {}".format(parent.sourceObject.spelling, cursor.kind, cursor.spelling), file=sys.stderr)
-                        return CxxVariable(cursor, parent)
+                        first_child = next(cursor.get_children(), None)
+                        if not first_child is None:
+                            if first_child.kind == cindex.CursorKind.ANNOTATE_ATTR and first_child.spelling.startswith(DONTSERIALIZE_ANNOTATION):
+                                print(">>> class {} DONTSERIALIZE field({}) {}".format(parent.sourceObject.spelling, cursor.kind, cursor.spelling), file=sys.stderr)                            
+                            else:
+                                print(">>> class {} field({}) {}".format(parent.sourceObject.spelling, cursor.kind, cursor.spelling), file=sys.stderr)
+                                return CxxVariable(cursor, parent)
                 pass
             return None
 

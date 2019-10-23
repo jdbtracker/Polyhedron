@@ -1,7 +1,7 @@
 from autobind.fileiterator import ForEachTranslationUnitInDirectory
 from autobind.compileflags import CompileFlagsFor, ForEachCompileFile
 from autobind.parsecpp import CppParser 
-from autobind.generator import CubeScriptBinding
+from autobind.generator import CubeScriptBinding, JsonSerializer
 import sys
 import os
 
@@ -62,16 +62,17 @@ def generate_code(file, outputfile):
     token_out = "// <<<<<<<<<< SCRIPTBIND <<<<<<<<<<<<<< //"
     fileTop = file_get_contents_upto(file, token_in)
     fileBottom = file_get_contents_from(file, token_out)
+    fileSerializer = JsonSerializer.Generate(parser.cppmodel())
 
-    if fileTop and fileTop != "\n":
+    if (fileTop and fileTop != "\n") or (fileSerializer and fileSerializer != "\n"):
         # if fileMid:
         #     file_write_data(file, fileTop + "\n\n" + token_in + "\n#if 0\n#include \"" + outputfile + "\"\n#endif\n" + token_out + "\n" + fileBottom)
         # else:
         #     file_write_data(file, fileTop + "\n\n" + token_in + "\n" + token_out + "\n" + fileBottom)
 
-        file_write_data(outputfile, fileMid)
-    else:
-        file_write_data(outputfile, "// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n// #error |{}|\n// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n".format(fileTop))
+        file_write_data(outputfile, fileMid + "\n\n" + fileSerializer)
+    # else:
+    #     file_write_data(outputfile, "// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n// #error |{}|\n// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n".format(fileTop))
 
 def find_deps(file, commonRoot):
     parser = CppParser(file, skipComments = True)
@@ -113,6 +114,7 @@ def output_sources():
 
 def usage():
     print("Usage: {} (dump|cppmodel|gen) <file> | (binding|input|ouput)".format(sys.argv[0]), file=sys.stderr)
+    print("    Command used: {}".format(" ".join(sys.argv)), file=sys.stderr)
 
 if __name__ == "__main__":
     # for file in ForEachTranslationUnitInDirectory("../game"):
