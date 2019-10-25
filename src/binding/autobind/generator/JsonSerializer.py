@@ -1,3 +1,5 @@
+CUSTOM_TOJSON_VARGENERATORS = {}
+CUSTOM_FROMJSON_VARGENERATORS = {}
 
 def Generate(cxxRootNode):
     from ..cppmodel.CxxClass import CxxClass
@@ -30,9 +32,6 @@ def GenerateJsonTemplateValues(cxxClass):
         "className": className
     }
 
-def GenerateFromJson(cxxClass):
-    return ""
-
 def GenerateToJson(cxxClass):
     templateValues = GenerateJsonTemplateValues(cxxClass)
 
@@ -52,15 +51,35 @@ def GenerateToJsonVariable(cxxVar):
     templateValues = GenerateJsonVariableTemplateValues(cxxVar)
     output = []
 
-    if (templateValues["variableType"] == "vec"):
-        output_obj = []
-        for m in ['x', 'y', 'z']:
-            output_obj.append(f"\t\"{m}\": {templateValues['variableName']}.{m}")
-        output = [f"{{\"{templateValues['variableName']}\""] + output_obj + ["}"]
+    if templateValues["variableType"] in CUSTOM_TOJSON_VARGENERATORS:
+        output = output + CUSTOM_TOJSON_VARGENERATORS[templateValues["variableType"]](templateValues)
     else:
         output.append(f"\"{templateValues['variableName']}\", {templateValues['variableName']}")
     return output
 
+
+def GenerateFromJson(cxxClass):
+    templateValues = GenerateJsonTemplateValues(cxxClass)
+
+    output = []
+    for child in cxxClass.forEachChild():
+        output = output + GenerateFromJsonVariable(child)
+    body = "\n\t".join(output)
+    return f"""void {templateValues['className']}::fromJson(const nlohmann::json& document)
+{{
+\t{body}
+}}
+"""
+
+def GenerateFromJsonVariable(cxxVar):
+    templateValues = GenerateJsonVariableTemplateValues(cxxVar)
+    output = []
+
+    if templateValues["variableType"] in CUSTOM_FROMJSON_VARGENERATORS:
+        output = output + CUSTOM_FROMJSON_VARGENERATORS[templateValues["variableType"]](templateValues)
+    else:
+        output.append(f"json_utils::tryQueryJsonVar(document, \"{templateValues['variableName']}\", {templateValues['variableName']});")
+    return output
 
 def GenerateJsonDebug(cxxClass):
     debug_output = []
@@ -76,3 +95,13 @@ def GenerateJsonVariableDebug(cxxVar):
     for key in templateValues:
         output.append(f"// {key} => {templateValues[key]}")
     return "\n".join(output)
+
+# ---- Custom Generators for specific variable types
+
+def CustomVarGenerator_toJson_vec(templateValues):
+    output_obj = []
+    for m in ['x', 'y', 'z']:
+        output_obj.append(f"\t\"{m}\": {templateValues['variableName']}.{m}")
+    return [f"{{\"{templateValues['variableName']}\""] + output_obj + ["}"]
+
+CUSTOM_TOJSON_VARGENERATORS['vec'] = CustomVarGenerator_toJson_vec

@@ -32,8 +32,8 @@ target_include_directories(SchizoMania_Shared_Client
 		${FREETYPE_INCLUDE_DIRS}
 		${ZLIB_INCLUDE_DIRS}
 		${OPENGL_INCLUDE_DIRS}
-    PRIVATE
     	shared/
+    PRIVATE
     	../engine/
         ../game/
         ../game/entities/

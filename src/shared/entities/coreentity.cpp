@@ -70,26 +70,6 @@ void CoreEntity::setName(const std::string &str) {
     name = str;
 }
 
-
-nlohmann::json CoreEntity::toJson()
-{
-	return {
-		{"name", name},
-		{"o", {
-			{"x", o.x},
-			{"y", o.y},
-			{"z", o.z},
-		}},
-		{"attr1", attr1},
-		{"attr2", attr2},
-		{"attr3", attr3},
-		{"attr4", attr4},
-		{"attr5", attr5},
-		{"reserved", reserved},
-		{"model_idx", model_idx}
-	};
-}
-
 void CoreEntity::saveToJsonImpl(nlohmann::json& document)
 {
 	document[classname] = toJson();
@@ -106,19 +86,6 @@ void CoreEntity::saveToJson(nlohmann::json& document)
 	};
 	
 	saveToJsonImpl(document);
-}
-
-void CoreEntity::fromJson(const nlohmann::json& document)
-{
-	json_utils::tryQueryJsonVar(document, "name", name);
-	json_utils::tryQueryJsonVar(document, "o", o);
-	json_utils::tryQueryJsonVar(document, "attr1", attr1);
-	json_utils::tryQueryJsonVar(document, "attr2", attr2);
-	json_utils::tryQueryJsonVar(document, "attr3", attr3);
-	json_utils::tryQueryJsonVar(document, "attr4", attr4);
-	json_utils::tryQueryJsonVar(document, "attr5", attr5);
-	json_utils::tryQueryJsonVar(document, "reserved", reserved);
-	json_utils::tryQueryJsonVar(document, "model_idx", model_idx);
 }
 
 //NOTE: Only CoreEntity needs to implement this

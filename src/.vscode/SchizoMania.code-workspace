@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../../media"
+		},
+		{
+			"path": "/Users/micha/dev/ScMaMike/config"
 		}
 	],
 	"settings": {}

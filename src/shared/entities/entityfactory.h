@@ -98,4 +98,4 @@ namespace entities {
 	static CoreEntity *Construct();\
 	virtual void fromJsonImpl(const nlohmann::json& document);\
     virtual void saveToJsonImpl(nlohmann::json& document); \
-    virtual ~LOCALNAME() {};
+    virtual ~LOCALNAME() = default;

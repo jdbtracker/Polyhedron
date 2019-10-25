@@ -1,3 +1,7 @@
 log.txt
 .DS_Store
 ide
+build/
+bscriptbinding/
+bentity_new/
+

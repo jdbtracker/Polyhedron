@@ -1221,13 +1221,15 @@ int main(int argc, char **argv)
 
 	// TODO: Not sure wtf this is for.
 	//if(execfile("once.cfg", false)) remove(findfile("once.cfg", "rb"));
+	
+	localconnect();
 	if(load)
 	{
 		// Since we are loading a map as a background, we best start doing a local connect.
 		logoutf("init: localconnect");
-		//localconnect();
 		game::changemap(load);
 	}
+	
 
 	// Somehow another init script.
 	if(initscript) execute(initscript);
