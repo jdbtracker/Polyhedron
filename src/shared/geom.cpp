@@ -288,6 +288,25 @@ extern const vec2 sincos360[721] =
     vec2(1.00000000, 0.00000000) // 720
 };
 
+void to_json(nlohmann::json& document, const vec& v)
+{
+	document = nlohmann::json{{"x", v.x}, {"y", v.y}, {"z", v.z}};
+}
 
-// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //
-// <<<<<<<<<< SCRIPTBIND <<<<<<<<<<<<<< //
+void from_json(const nlohmann::json& document, vec& v) {
+	document.at("x").get_to(v.x);
+	document.at("y").get_to(v.y);
+	document.at("z").get_to(v.z);
+}
+
+void to_json(nlohmann::json& document, const vec4& v)
+{
+	document = nlohmann::json{{"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w}};
+}
+
+void from_json(const nlohmann::json& document, vec4& v) {
+	document.at("x").get_to(v.x);
+	document.at("y").get_to(v.y);
+	document.at("z").get_to(v.z);
+	document.at("w").get_to(v.w);
+}

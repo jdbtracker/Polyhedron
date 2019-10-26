@@ -15,11 +15,6 @@ bool BaseEntity::onTrigger(const entities::classes::CoreEntity *otherEnt, const 
 bool BaseEntity::onTouch(const entities::classes::CoreEntity *otherEnt, const vec &dir) { return false; }
 bool BaseEntity::onUse(CoreEntity *otherEnt, const vec &dir) { return false; }
 
-nlohmann::json BaseEntity::toJson()
-{
-	return nlohmann::json {};
-}
-
 
 } // classes
 } // entities

@@ -30,8 +30,6 @@ namespace entities
             // otherEnt = the entity which has used you. (Like, hit a button.)
             virtual bool onUse(CoreEntity *otherEnt, const vec &dir);
 
-        protected:
-            nlohmann::json toJson();
         };
     } // classes
 } // entities

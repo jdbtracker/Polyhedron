@@ -110,6 +110,8 @@ target_link_libraries(SchizoMania_Engine_Client
         ${OPENGL_LIBRARIES}
 )
 
+set_source_group(SchizoMania_Engine_Client)
+set_property(TARGET SchizoMania_Engine_Client PROPERTY FOLDER "engine")
 
 # target_compile_definitions(SchizoMania_Engine_Server PUBLIC -DSTANDALONE)
 

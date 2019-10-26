@@ -4,7 +4,7 @@ CUSTOM_FROMJSON_VARGENERATORS = {}
 def Generate(cxxRootNode):
     from ..cppmodel.CxxClass import CxxClass
     
-    template = """#include "shared/entities/coreentity.h"
+    template = """#include "{}"
 {}"""
     generated_funcs = []
     for node in cxxRootNode.forEachChild():
@@ -14,7 +14,9 @@ def Generate(cxxRootNode):
             generated_funcs.append(GenerateJsonDebug(node))
     if len(generated_funcs) == 0:
         return ""
-    return template.format("\n".join(generated_funcs))
+
+    headerFile = str(cxxRootNode)[3:-4] + ".h"
+    return template.format(headerFile, "\n".join(generated_funcs))
 
 def GenerateJsonVariableTemplateValues(cxxVar):
     variableName = cxxVar.sourceObject.spelling
@@ -37,24 +39,24 @@ def GenerateToJson(cxxClass):
 
     output = []
     for child in cxxClass.forEachChild():
-        output = output + GenerateToJsonVariable(child)
+        output = output + GenerateToJsonVariable(child, "entity_t")
     body = ",\n\t\t".join(output)
-    return f"""nlohmann::json {templateValues['className']}::toJson()
+    return cxxClass.namespaceBlock(f"""void to_json(nlohmann::json& document, const {templateValues['className']}& entity_t)
 {{
-\treturn {{
+\tdocument = {{
 \t\t{body}
 \t}};
 }}
-"""
+""")    
 
-def GenerateToJsonVariable(cxxVar):
+def GenerateToJsonVariable(cxxVar, instanceVar):
     templateValues = GenerateJsonVariableTemplateValues(cxxVar)
     output = []
 
     if templateValues["variableType"] in CUSTOM_TOJSON_VARGENERATORS:
         output = output + CUSTOM_TOJSON_VARGENERATORS[templateValues["variableType"]](templateValues)
     else:
-        output.append(f"\"{templateValues['variableName']}\", {templateValues['variableName']}")
+        output.append(f"{{\"{templateValues['variableName']}\", {instanceVar}.{templateValues['variableName']}}}")
     return output
 
 
@@ -63,22 +65,22 @@ def GenerateFromJson(cxxClass):
 
     output = []
     for child in cxxClass.forEachChild():
-        output = output + GenerateFromJsonVariable(child)
+        output = output + GenerateFromJsonVariable(child, "document", "entity_t")
     body = "\n\t".join(output)
-    return f"""void {templateValues['className']}::fromJson(const nlohmann::json& document)
+    return cxxClass.namespaceBlock(f"""void from_json(const nlohmann::json& document,  {templateValues['className']}& entity_t)
 {{
 \t{body}
 }}
-"""
+""")
 
-def GenerateFromJsonVariable(cxxVar):
+def GenerateFromJsonVariable(cxxVar, jsonRootVar, instanceVar):
     templateValues = GenerateJsonVariableTemplateValues(cxxVar)
     output = []
 
     if templateValues["variableType"] in CUSTOM_FROMJSON_VARGENERATORS:
         output = output + CUSTOM_FROMJSON_VARGENERATORS[templateValues["variableType"]](templateValues)
     else:
-        output.append(f"json_utils::tryQueryJsonVar(document, \"{templateValues['variableName']}\", {templateValues['variableName']});")
+        output.append(f"if (document.find(\"{templateValues['variableName']}\") != document.end()) {jsonRootVar}.at(\"{templateValues['variableName']}\").get_to({instanceVar}.{templateValues['variableName']});")
     return output
 
 def GenerateJsonDebug(cxxClass):
@@ -98,10 +100,17 @@ def GenerateJsonVariableDebug(cxxVar):
 
 # ---- Custom Generators for specific variable types
 
-def CustomVarGenerator_toJson_vec(templateValues):
-    output_obj = []
-    for m in ['x', 'y', 'z']:
-        output_obj.append(f"\t\"{m}\": {templateValues['variableName']}.{m}")
-    return [f"{{\"{templateValues['variableName']}\""] + output_obj + ["}"]
+# def CustomVarGenerator_toJson_vec(templateValues):
+#     output_obj = []
+#     for m in ['x', 'y', 'z']:
+#         output_obj.append(f"\"{m}\", {templateValues['variableName']}.{m}")
+#     return [f"\"{templateValues['variableName']}\""] + ["{{" + ", ".join(output_obj) + "}}"]
 
-CUSTOM_TOJSON_VARGENERATORS['vec'] = CustomVarGenerator_toJson_vec
+# def CustomVarGenerator_toJson_vec4(templateValues):
+#     output_obj = []
+#     for m in ['x', 'y', 'z', 'w']:
+#         output_obj.append(f"\"{m}\", {templateValues['variableName']}.{m}")
+#     return [f"\"{templateValues['variableName']}\""] + ["{{" + ", ".join(output_obj) + "}}"]
+
+# CUSTOM_TOJSON_VARGENERATORS['vec'] = CustomVarGenerator_toJson_vec
+# CUSTOM_TOJSON_VARGENERATORS['vec4'] = CustomVarGenerator_toJson_vec4

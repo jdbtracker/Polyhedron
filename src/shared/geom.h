@@ -380,6 +380,11 @@ struct vec4
     vec4 &rotate_around_y(const vec2 &sc) { return rotate_around_y(sc.x, sc.y); }
 };
 
+void to_json(nlohmann::json& document, const vec& v);
+void from_json(const nlohmann::json& document, vec& v);
+void to_json(nlohmann::json& document, const vec4& v);
+void from_json(const nlohmann::json& document, vec4& v);
+
 inline vec2::vec2(const vec4 &v) : x(v.x), y(v.y) {}
 inline vec::vec(const vec4 &v) : x(v.x), y(v.y), z(v.z) {}
 

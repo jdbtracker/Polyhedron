@@ -1,5 +1,6 @@
 #pragma once
 #include "shared/entities/basedynamicentity.h"
+#include "engine/engine.h"
 
 namespace entities
 {
@@ -28,7 +29,7 @@ namespace entities
             void loadModelAttributes();
 
         private:
-            mapmodelinfo mmi;
+            DONTSERIALIZE mapmodelinfo mmi;
             std::string filename;
 
         public:

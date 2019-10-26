@@ -36,7 +36,7 @@ namespace entities {
 			//
 			// Entity member variables.
 			//
-            entities::classes::BasePhysicalEntity *camera;
+            DONTSERIALIZE entities::classes::BasePhysicalEntity *camera;
 			
         private:
 

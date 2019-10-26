@@ -15,10 +15,6 @@ namespace entities {
             void reset();
 
 			float yaw = 0.0f;
-		protected:
-			//Serialization
-			nlohmann::json toJson();
-			void fromJson(const nlohmann::json& document);
 
         private:
         };

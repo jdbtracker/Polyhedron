@@ -1,6 +1,7 @@
 #CMake Configuration for Tesseract "The Right Way (tm)"
 cmake_minimum_required(VERSION 3.13)
 project(SchizoMania)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Build options.
 option(SCHIZOMANIA_BUILD_CLIENT "Build the game client" ON)
@@ -67,6 +68,25 @@ add_definitions("-DGL_SILENCE_DEPRECATION")
 include_directories(
     ext/json-develop/single_include
 )
+
+#util
+function(set_source_group target)
+  get_target_property(sourceDir ${target} SOURCE_DIR)
+  get_target_property(sourceList ${target} SOURCES)
+
+  ## convert sourceList -> sourceListAbsolute 
+  set(sourceListAbsolute "")
+  foreach(source IN LISTS sourceList)
+    if (NOT IS_ABSOLUTE "${source}")
+      set(source "${sourceDir}/${source}")
+    endif()
+    get_filename_component(source "${source}" ABSOLUTE)
+    list(APPEND sourceListAbsolute "${source}")
+  endforeach()
+
+  source_group(TREE ${sourceDir} FILES ${sourceListAbsolute})
+endfunction()
+
 
 #The engine, server and shared sub projects
 add_subdirectory(enet)

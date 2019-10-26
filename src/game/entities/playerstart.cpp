@@ -25,18 +25,6 @@ void PlayerStart::reset() {
 
 }
 
-nlohmann::json PlayerStart::toJson()
-{
-	return {
-		{"yaw", yaw}
-	};
-}
-
-void PlayerStart::fromJson(const nlohmann::json& document)
-{
-	json_utils::tryQueryJsonVar(document, "yaw", yaw);
-}
-
 } // classes
 } // entities
 

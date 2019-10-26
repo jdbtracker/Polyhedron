@@ -11,8 +11,6 @@ add_library(SchizoMania_Game_Client STATIC
 
     entities/basemapmodel.cpp
     entities/basemapmodel.h
-    entities/basemodel.cpp
-    entities/basemodel.h
     entities/door.cpp
     entities/door.h
     entities/dynamiclight.cpp
@@ -58,3 +56,5 @@ target_link_libraries(SchizoMania_Game_Client
 
 # target_include_directories(SchizoMania_Game_Server PUBLIC ${CMAKE_SOURCE_DIR})
 
+set_source_group(SchizoMania_Game_Client)
+set_property(TARGET SchizoMania_Game_Client PROPERTY FOLDER "game")

@@ -103,7 +103,7 @@ target_link_libraries(SchizoMania_Binding
 
 foreach(input_file ${input_sources})
     execute_process(
-        COMMAND python3 index.py cmake_output ${input_file}
+        COMMAND ${PYTHON} index.py cmake_output ${input_file}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         OUTPUT_VARIABLE input_file_target
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -112,3 +112,6 @@ foreach(input_file ${input_sources})
 
     add_dependencies(SchizoMania_Binding target_${input_file_target})
 endforeach()
+
+set_property(TARGET SchizoMania_Binding PROPERTY FOLDER "binding")
+source_group("Custom Targets" REGULAR_EXPRESSION "^target_\.\.")

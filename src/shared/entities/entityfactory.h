@@ -69,17 +69,17 @@ namespace entities {
 
 #define ADD_ENTITY_TO_FACTORY_SERIALIZED(LOCALNAME, CLASSNAME, DERIVED) \
 	ADD_ENTITY_TO_FACTORY(LOCALNAME, CLASSNAME) \
+	namespace entities { namespace classes {\
+		extern void from_json(const nlohmann::json&, LOCALNAME&);\
+		extern void to_json(nlohmann::json&, const LOCALNAME&);\
+	} }\
 	void entities::classes::LOCALNAME::fromJsonImpl(const nlohmann::json& document) {\
 		DERIVED::fromJsonImpl(document);\
-		auto subdoc = json_utils::getSubobject(document, CLASSNAME);\
-		if (subdoc.is_object())\
-		{\
-			fromJson(subdoc);\
-		}\
+		document.at(CLASSNAME).get_to(*this);\
 	}\
 	void entities::classes::LOCALNAME::saveToJsonImpl(nlohmann::json& document) {\
 		DERIVED::saveToJsonImpl(document);\
-		document[CLASSNAME] = toJson();\
+		document[CLASSNAME] = nlohmann::json{*this};\
 	}
 
 //
@@ -93,6 +93,8 @@ namespace entities {
 #define ENTITY_FACTORY_IMPL(LOCALNAME) \
 	public:\
 	friend class LOCALNAME##Intializer;\
+	friend void from_json(const nlohmann::json&, LOCALNAME&);\
+	friend void to_json(nlohmann::json&, const LOCALNAME&);\
     static const std::string classname;\
 	virtual std::string currentClassname();\
 	static CoreEntity *Construct();\

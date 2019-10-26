@@ -90,6 +90,8 @@ add_library(enet STATIC
 )
 target_include_directories (enet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+set_source_group(enet)
+set_property(TARGET enet PROPERTY FOLDER "enet")
 
 if (MINGW)
     target_link_libraries(enet winmm ws2_32)

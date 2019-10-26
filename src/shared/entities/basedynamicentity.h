@@ -16,14 +16,15 @@ namespace entities
             void stopmoving();
             vec abovehead();
             
-            bool k_left = false;
-            bool k_right = false;
-            bool k_up = false;
-            bool k_down = false;
-            animinterpinfo animinterp[MAXANIMPARTS] { 0 };
-            ragdolldata *ragdoll = nullptr;
-            occludequery *query = nullptr;
-            int lastrendered = -1;
+            DONTSERIALIZE bool k_left = false;
+            DONTSERIALIZE bool k_right = false;
+            DONTSERIALIZE bool k_up = false;
+            DONTSERIALIZE bool k_down = false;
+            DONTSERIALIZE animinterpinfo animinterp[MAXANIMPARTS] { 0 };
+            DONTSERIALIZE ragdolldata *ragdoll = nullptr;
+            DONTSERIALIZE occludequery *query = nullptr;
+            DONTSERIALIZE int lastrendered = -1;
+		protected:
         };
     } // classes
 } // entities

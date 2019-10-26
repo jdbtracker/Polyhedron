@@ -32,7 +32,7 @@ target_include_directories(SchizoMania_Shared_Client
 		${FREETYPE_INCLUDE_DIRS}
 		${ZLIB_INCLUDE_DIRS}
 		${OPENGL_INCLUDE_DIRS}
-    	shared/
+    	./
     PRIVATE
     	../engine/
         ../game/
@@ -56,3 +56,5 @@ target_link_libraries(SchizoMania_Shared_Client
 
 # target_include_directories(SchizoMania_Shared_Server PUBLIC ${CMAKE_SOURCE_DIR})
 
+set_source_group(SchizoMania_Shared_Client)
+set_property(TARGET SchizoMania_Shared_Client PROPERTY FOLDER "shared")
