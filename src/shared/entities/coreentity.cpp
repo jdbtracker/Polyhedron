@@ -130,6 +130,17 @@ void CoreEntity::loadFromJson(const nlohmann::json& document) {
 	fromJsonImpl(document);
 }
 
+void CoreEntity::renderForEdit()
+{
+
+}
+
+void CoreEntity::renderForEditGui()
+{
+
+}
+
+
 void from_json(const nlohmann::json& document,  entities::classes::CoreEntity* entity_ptr)
 {
 	document.get_to(entity_ptr->name);

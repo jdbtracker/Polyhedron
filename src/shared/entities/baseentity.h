@@ -17,6 +17,9 @@ namespace entities
             virtual void think();
             // Called each frame to render.
             virtual void render();
+            virtual void renderGui();
+            virtual void renderForEdit();
+            virtual void renderForEditGui();
 
             //
             // OnEvent callbacks.

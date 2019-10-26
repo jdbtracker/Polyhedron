@@ -64,6 +64,11 @@ namespace entities {
             virtual void onAttributeSet(const std::string &key, const std::string &value) {}
             virtual std::string onAttributeGet(const std::string &key) { return ""; }
             virtual std::vector<std::string> onAttributeList() { return {}; }
+            
+            void setName(const std::string &str = "coreentity");
+            
+            virtual void renderForEdit();
+            virtual void renderForEditGui();
         public:
             //
             // CoreEntity data.
@@ -75,7 +80,6 @@ namespace entities {
             // CoreEntity utility functions.
             //
             // Sets the name of the entity.
-            void setName(const std::string &str = "coreentity");
         };
         
 		void from_json(const nlohmann::json& document,  entities::classes::CoreEntity* entity_ptr);
