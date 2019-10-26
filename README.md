@@ -25,7 +25,7 @@ For those of you who do want to read the Chapter 1 spoiler, I suggest you go to 
 # Technology behind it:
 SchizoMania game, using [Tesseract](http://tesseract.gg) engine.
 
-Although it is using [Tesseract](http://tesseract.gg) as a base, it does not refrain from heavily modifying parts that need a change.
+Although it is using [Tesseract](http://tesseract.gg) as a base, it does not refrain from heavily modifying parts that need a change. Having eventually resulted in a new engine [Polyhedron](http://pyramid-apex-games.github.io/Polyhedron)
 
 # Helping out:
 In order to help us out, there is an irc channel on, irc.freenode.net #schizomania, and there is a [Discord](https://discord.gg/euwTtYx) server which we strongly advise you to join instead. 
