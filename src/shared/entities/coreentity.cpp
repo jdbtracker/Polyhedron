@@ -132,12 +132,20 @@ void CoreEntity::loadFromJson(const nlohmann::json& document) {
 
 void from_json(const nlohmann::json& document,  entities::classes::CoreEntity* entity_ptr)
 {
-	document.get_to(entity_ptr->name);
+	std::string name;
+	document.get_to(name);
 }
 
 void to_json(nlohmann::json& document, const entities::classes::CoreEntity* entity_ptr)
 {
-	document = nlohmann::json {entity_ptr->name};
+	if (entity_ptr)
+	{
+		document = nlohmann::json {entity_ptr->name};
+	}
+	else
+	{
+		document = "";
+	}
 }
 } // classes
 } // entities
