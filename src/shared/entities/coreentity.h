@@ -69,6 +69,9 @@ namespace entities {
             
             virtual void renderForEdit();
             virtual void renderForEditGui();
+            virtual void renderSelected();
+			void renderHighlight(int entselradius, int entorient, float thickness);
+			void renderMoveShadow(int entselradius, int size);
         public:
             //
             // CoreEntity data.

@@ -6,70 +6,9 @@
 #include "coreentity.h"
 #include "entityfactory.h"
 
-/*
-const nlohmann::json json_utils::getSubobject(const nlohmann::json& document, const std::string& key)
-{
-	if (document.find(key) != document.end()){
-		const auto& subObject = document.at(key);
-		if (subObject.is_object())
-		{
-			return subObject;
-		}
-	}
-	
-	return NULL;
-}
-
-
-
-template<>
-bool json_utils::tryQueryJsonVar(const nlohmann::json& document, const std::string& key, vec& value)
-{
-	if (document.find(key) != document.end()) {
-		try {
-			auto obj = document.at(key);
-			
-			if (obj.is_object())
-			{
-				json_utils::tryQueryJsonVar(obj, "x", value.x);
-				json_utils::tryQueryJsonVar(obj, "y", value.y);
-				json_utils::tryQueryJsonVar(obj, "z", value.z);
-			}
-			
-			return true;
-		}
-		catch(nlohmann::json::type_error& e) {
-            conoutf(CON_ERROR, "nlohmann went nuts again: %s", e.what());
-		}
-	}
-	
-	return false;
-}
-
-template<>
-bool json_utils::tryQueryJsonVar(const nlohmann::json& document, const std::string& key, vec4& value)
-{
-	if (document.find(key) != document.end()) {
-		try {
-			auto obj = document.at(key);
-			
-			if (obj.is_object())
-			{
-				json_utils::tryQueryJsonVar(obj, "x", value.x);
-				json_utils::tryQueryJsonVar(obj, "y", value.y);
-				json_utils::tryQueryJsonVar(obj, "z", value.z);
-				json_utils::tryQueryJsonVar(obj, "w", value.w);
-			}
-			
-			return true;
-		}
-		catch(nlohmann::json::type_error& e) {
-            conoutf(CON_ERROR, "nlohmann went nuts again: %s", e.what());
-		}
-	}
-	
-	return false;
-}*/
+extern void boxs3D(const vec &o, vec s, int g);
+extern void boxs(int orient, vec o, const vec &s);
+extern void boxs(int orient, vec o, const vec &s, float size);
 
 namespace entities {
 namespace classes {
@@ -140,6 +79,41 @@ void CoreEntity::renderForEditGui()
 
 }
 
+void CoreEntity::renderSelected()
+{
+	
+}
+
+
+void CoreEntity::renderHighlight(int entselradius, int entorient, float thickness)
+{
+	gle::colorub(0, 40, 0);
+	vec es(entselradius);
+    vec eo = o;
+    eo.sub(es);
+    es.mul(2);
+    
+	boxs3D(eo, es, 1);
+
+	gle::colorub(200,0,0);
+	boxs(entorient, eo, es, thickness);
+}
+
+void CoreEntity::renderMoveShadow(int entselradius, int size)
+{
+	vec es(entselradius);
+    vec eo = o;
+    eo.sub(es);
+    es.mul(2);
+
+	vec a, b;
+	gle::colorub(20, 20, 20);
+	(a = eo).x = eo.x - fmod(eo.x, size); (b = es).x = a.x + size; boxs3D(a, b, 1);
+	(a = eo).y = eo.y - fmod(eo.y, size); (b = es).y = a.x + size; boxs3D(a, b, 1);
+	(a = eo).z = eo.z - fmod(eo.z, size); (b = es).z = a.x + size; boxs3D(a, b, 1);
+}
+
+
 
 void from_json(const nlohmann::json& document,  entities::classes::CoreEntity* entity_ptr)
 {
@@ -148,7 +122,14 @@ void from_json(const nlohmann::json& document,  entities::classes::CoreEntity* e
 
 void to_json(nlohmann::json& document, const entities::classes::CoreEntity* entity_ptr)
 {
-	document = nlohmann::json {entity_ptr->name};
+	if (entity_ptr)
+	{
+		document = nlohmann::json {entity_ptr->name};
+	}
+	else
+	{
+		document = nlohmann::json {nullptr};
+	}
 }
 } // classes
 } // entities

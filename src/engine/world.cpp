@@ -922,22 +922,16 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
         xtraverts += gle::end();
     }
 
-    if(enthover >= 0)
+    if(enthover >= 0 && enthover < entities::getents().length())
     {
-        gle::colorub(0, 40, 0);
-        entfocus(enthover, entselectionbox(e, eo, es)); // also ensures enthover is back in focus
-        boxs3D(eo, es, 1);
+		auto highlighted_ent = entities::getents()[enthover];
+		float cameraRelativeTickness = clamp(0.015f*camera1->o.dist(highlighted_ent->o)*tan(fovy*0.5f*RAD), 0.1f, 1.0f);
+		highlighted_ent->renderHighlight(entselradius, entorient, cameraRelativeTickness);
+
         if(entmoving && entmovingshadow==1)
         {
-            vec a, b;
-            gle::colorub(20, 20, 20);
-            (a = eo).x = eo.x - fmod(eo.x, worldsize); (b = es).x = a.x + worldsize; boxs3D(a, b, 1);
-            (a = eo).y = eo.y - fmod(eo.y, worldsize); (b = es).y = a.x + worldsize; boxs3D(a, b, 1);
-            (a = eo).z = eo.z - fmod(eo.z, worldsize); (b = es).z = a.x + worldsize; boxs3D(a, b, 1);
+			highlighted_ent->renderMoveShadow(entselradius, worldsize);
         }
-        gle::colorub(200,0,0);
-        boxs(entorient, eo, es);
-        boxs(entorient, eo, es, clamp(0.015f*camera1->o.dist(eo)*tan(fovy*0.5f*RAD), 0.1f, 1.0f));
     }
 
     if(showentradius)
