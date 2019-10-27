@@ -23,9 +23,23 @@ def CompileFlagsFor(buildpath, file):
     for entry in compile_commands[buildpath]:
         if entry["file"] == absfile:
             flags = entry["command"].split()
-            return flags[1:-5]
+            return NormalizeCompileFlags(buildpath, flags[1:-5])
 
     raise Exception("TranslationUnit {} not found in {}, {}".format(absfile, compile_commands_filename, buildpath))
+
+def NormalizeCompileFlags(buildpath, flags):
+    oldworkdir = os.getcwd()
+    os.chdir(buildpath)
+    output = []
+    for flag in flags:
+        if flag[:2] == "-I":
+            importPath = os.path.abspath(flag[2:])
+            output.append("-I"+importPath)
+        else:
+            output.append(flag)
+    os.chdir(oldworkdir)
+    return output
+
 
 def ForEachCompileFile(buildpath, rootpath):
     InitializeCompileCommands(buildpath)

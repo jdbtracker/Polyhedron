@@ -1,12 +1,12 @@
 {
     "version": "0.2.0",
-    "configurations": [
-    
+    "configurations":
+    [
         {
-            "name": "SchizoMania OSX - x64 - Debug",
+            "name": "OSX - x64 - Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/SchizoMania_Client.app/Contents/MacOS/SchizoMania_Client",
+            "program": "${workspaceFolder}/build/Polyhedron.app/Contents/MacOS/Polyhedron",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -15,18 +15,10 @@
             "MIMode": "lldb"
         },
         {
-            "name": "ScriptBind",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/binding/index.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/binding"
-        },
-        {
             "name": "Linux - x64 - Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/SchizoMania_Client",
+            "program": "${workspaceFolder}/build/Polyhedron",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/..",

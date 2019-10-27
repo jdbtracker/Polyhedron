@@ -5,6 +5,8 @@ from autobind.generator import CubeScriptBinding, JsonSerializer
 import sys
 import os
 
+CompileCommandsFolder = "build"
+
 def drop_trailing_empty_lines(lines):
     idx = len(lines) - 1
     while idx > 0 and lines[idx] and lines[idx] == "\n":
@@ -41,19 +43,19 @@ def file_write_data(file, data):
 
 
 def debug_dump(file):
-    parser = CppParser(file)
+    parser = CppParser(CompileCommandsFolder, file)
     parser.start()
     parser.tree_generate()
     parser.dump_tree()
 
 def debug_cppmodel(file):
-    parser = CppParser(file)
+    parser = CppParser(CompileCommandsFolder, file)
     parser.start()
     parser.cppmodel_generate()
     parser.dump_cppmodel()
 
 def generate_code(file, outputfile):
-    parser = CppParser(file)
+    parser = CppParser(CompileCommandsFolder, file)
     parser.start()
     parser.cppmodel_generate()
     fileMid = CubeScriptBinding.GenerateWithoutMacros(parser.cppmodel())
@@ -75,7 +77,7 @@ def generate_code(file, outputfile):
     #     file_write_data(outputfile, "// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n// #error |{}|\n// >>>>>>>>>> SCRIPTBIND >>>>>>>>>>>>>> //\n".format(fileTop))
 
 def find_deps(file, commonRoot):
-    parser = CppParser(file, skipComments = True)
+    parser = CppParser(CompileCommandsFolder, file, skipComments = True)
     parser.start(skipFunctionBodies = True)
     parser.cppmodel_find_includes(commonRoot)
     # parser.dump_code()

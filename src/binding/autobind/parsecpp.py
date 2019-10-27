@@ -24,9 +24,9 @@ PROJECT_ROOT = os.path.dirname(os.getcwd())
 
 class CppParser:
 
-    def __init__(self, file, skipComments = False):
-        self.file = file
-        self.flags = CompileFlagsFor("../build", file)
+    def __init__(self, buildfolder, file, skipComments = False):
+        self.file = os.path.abspath(file)
+        self.flags = CompileFlagsFor(buildfolder, file)
         if skipComments is False:
             self.flags.append("-DSCRIPTBIND_RUN")
             self.flags.append("-fparse-all-comments")
@@ -34,6 +34,7 @@ class CppParser:
         self.model = None
         self.translation_unit = None
         self.hierarchy_cache = {}
+        # print (f"Flags for {file} => {self.flags}")
 
     def start(self, skipFunctionBodies = False):
         for cpath in libclang_paths:
@@ -47,6 +48,11 @@ class CppParser:
         else:
             self.translation_unit = index.parse(self.file, self.flags, None, cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES | cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD)
         self.model = CxxNode(self.translation_unit.cursor)
+
+        if self.translation_unit.diagnostics:
+            print ("---- DIAG ----", file=sys.stderr)
+            for diag in self.translation_unit.diagnostics:
+                print (diag, file=sys.stderr)        
 
     def cursor_class_inherits_from(self, cursor):
         collected_classes = []

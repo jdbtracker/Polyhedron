@@ -15,7 +15,7 @@ def Generate(cxxRootNode):
     if len(generated_funcs) == 0:
         return ""
 
-    headerFile = str(cxxRootNode)[3:-4] + ".h"
+    headerFile = str(cxxRootNode)[:-4] + ".h"
     return template.format(headerFile, "\n".join(generated_funcs))
 
 def GenerateJsonVariableTemplateValues(cxxVar):

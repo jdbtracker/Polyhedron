@@ -204,7 +204,7 @@ def GenerateFunctionForwardDeclaration(cxxFunc):
         "func": templateValues['cppOriginalFunctionName']
     }
 
-    forwardDecl = "{return} {func}({args});".format(**vals)
+    forwardDecl = "extern {return} {func}({args});".format(**vals)
     if templateValues['cppNamespaceHierarchy']:
         for ns in templateValues['cppNamespaceHierarchy']:
             forwardDecl = "namespace {} {{ {} }}".format(ns, forwardDecl)
