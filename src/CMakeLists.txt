@@ -330,6 +330,7 @@ else()
         ${FREETYPE_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        rt
     )
 endif()
 
